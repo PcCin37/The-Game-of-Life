@@ -8,43 +8,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define row 20
-#define col 20
-
-int readinitmap() {
+int readinitmap(int* row, int* col, char* filename) {
     FILE *fp;
-    int i = 0;
-    int j = 0;
-    char ch = '\0';
-    fp = fopen("initmap.txt","r");
+    char in[500];
+    int i;
+    int j;
+    char temp;
+    fp = fopen(filename,"r");
 
-    if (!fp) {
+    if (fp == NULL) {
         printf("Can not find such initial file.\n");
         return -1;
     }
-
-    int Map1[row][col] = {0};
-    int Map2[row][col] = {0};
-
-
-    for (i = 0; i < row; i++) {
-        // read the whole line
-        for (j = 0; j < col; j++){
-            // read each char in the array
-            fscanf(fp, "%c", &ch);
-            if ('*' != ch) {
-                // '0' represent dead cell
-                Map1[i][j] = 0;
-                Map2[i][j] = 0;
-            }
-            else {
-                // '1' represent live cell
-                Map1[i][j] = 1;
-                Map2[i][j] = 1;
-            }
-        }
-        // at the end of each line, there has a '\0'. so, read it again
-        fscanf(fp, "%c", &ch);
+    if (fgets(in, 300, fp) == NULL) {
+        printf("Nothing in the file.\n");
+        return -2;
     }
+
+    for (i = 0, j = 0; i < strlen(in) && in[i] != '\n' && in[i] != '\r'; i++) {
+        if (in[i] == '1' || in[i] == '0') {
+            j++;
+        }
+    }
+    * col = j;
+    for (j = 1; fgets(in, 300, fp) != NULL; j++);
+    * row = j;
     return 0;
+    fclose(fp);
 }

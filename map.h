@@ -5,6 +5,6 @@
 #ifndef PJ_MAP_H
 #define PJ_MAP_H
 
-int readinitmap();
+int readinitmap(int*, int*, char*);
 
 #endif //PJ_MAP_H
