@@ -33,6 +33,6 @@ int readinitmap(int* row, int* col, char* filename) {
     * col = j;
     for (j = 1; fgets(in, 300, fp) != NULL; j++);
     * row = j;
-    return 0;
     fclose(fp);
+    return 0;
 }
