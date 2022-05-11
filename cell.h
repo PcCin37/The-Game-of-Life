@@ -1,10 +1,16 @@
 //
-// Created by asus on 2022/5/10.
+// Created by asus on 2022/5/11.
 //
 
-#ifndef MAIN_C_CELL_H
-#define MAIN_C_CELL_H
+#ifndef PJCWK2_CELL_H
+#define PJCWK2_CELL_H
 
-int status(int, int);
+void initial_mark(int, int);
+void initial_cell(int, int);
+void simulation(int, int, int);
 
-#endif //MAIN_C_CELL_H
+int flag[2000][2000];
+int cell[2000][2000];
+
+
+#endif //PJCWK2_CELL_H

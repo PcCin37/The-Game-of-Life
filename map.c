@@ -1,38 +1,33 @@
 //
-// Created by asus on 2022/5/9.
+// Created by asus on 2022/5/11.
 //
-
-#include "map.h"
-
 #include <stdio.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
-int readinitmap(int* row, int* col, char* filename) {
+#include "map.h"
+#include "cell.h"
+
+void read_status() {
     FILE *fp;
-    char in[500];
-    int i;
-    int j;
-    char temp;
-    fp = fopen(filename,"r");
-
-    if (fp == NULL) {
-        printf("Can not find such initial file.\n");
-        return -1;
-    }
-    if (fgets(in, 300, fp) == NULL) {
-        printf("Nothing in the file.\n");
-        return -2;
+    fp = fopen("cell_status.txt", "r");
+    if (fp = NULL) {
+        fprintf(stderr, "fopen() failed.\n");
+        exit(EXIT_FAILURE);
     }
 
-    for (i = 0, j = 0; i < strlen(in) && in[i] != '\n' && in[i] != '\r'; i++) {
-        if (in[i] == '1' || in[i] == '0') {
-            j++;
+    char row[3000];
+    int p = 0;
+    int i = 0;
+
+    while (fgets(row, 3000, fp) != NULL) {
+        if (row[0] != '-') {
+            for (int j = 0; j < strlen(row); j++) {
+                cell[i][j] = row[j] - '0';
+            }
+            i += 1;
         }
+        p += 1;
     }
-    * col = j;
-    for (j = 1; fgets(in, 300, fp) != NULL; j++);
-    * row = j;
-    fclose(fp);
-    return 0;
 }

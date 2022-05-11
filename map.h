@@ -1,10 +1,11 @@
 //
-// Created by asus on 2022/5/9.
+// Created by asus on 2022/5/11.
 //
 
-#ifndef PJ_MAP_H
-#define PJ_MAP_H
+#ifndef PJCWK2_MAP_H
+#define PJCWK2_MAP_H
 
-int readinitmap(int*, int*, char*);
+void read_status();
 
-#endif //PJ_MAP_H
+
+#endif //PJCWK2_MAP_H
