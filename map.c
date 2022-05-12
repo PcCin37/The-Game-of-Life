@@ -10,18 +10,21 @@
 #include "cell.h"
 
 void read_status() {
+    printf("4");
     FILE *fp;
     fp = fopen("cell_status.txt", "r");
     if (fp = NULL) {
         fprintf(stderr, "fopen() failed.\n");
         exit(EXIT_FAILURE);
     }
+    printf("5");
 
     char row[3000];
     int p = 0;
     int i = 0;
 
     while (fgets(row, 3000, fp) != NULL) {
+        printf("6");
         if (row[0] != '-') {
             for (int j = 0; j < strlen(row); j++) {
                 cell[i][j] = row[j] - '0';

@@ -39,7 +39,7 @@ void initial_cell(int n, int m) {
         }
         printf("\n");
     }
-    fprintf(fp, "initial status\n");
+    fprintf(fp, "--initial status--\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             fprintf(fp, "%d", cell[i][j]);
@@ -50,6 +50,7 @@ void initial_cell(int n, int m) {
 }
 
 void simulation(int l, int n, int m) {
+    printf("3");
     read_status();
 
     for (int i = 0; i < n; i++) {
@@ -129,7 +130,7 @@ void simulation(int l, int n, int m) {
     }
     FILE *fp;
     fp = fopen("cell_status.txt", "w");
-    fprintf(fp, "final status\n");
+    fprintf(fp, "--final status--\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             fprintf(fp, "%d", cell[i][j]);
