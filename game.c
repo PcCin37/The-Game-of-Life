@@ -37,7 +37,8 @@ void initial_cell(int n, int m) {
 
     //-------------output--------------
     FILE *fp;
-    fp = fopen("cell_status.txt","w");
+    fp = fopen(myfile,"w");
+    printf("\nInitial status:\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             printf("%d ",cell[i][j]);
@@ -56,9 +57,9 @@ void initial_cell(int n, int m) {
 
 void read_status() {
     FILE *fp;
-    fp = fopen("cell_status.txt","r");
+    fp = fopen(myfile,"r");
     if (fp == NULL) {
-        fprintf(stderr, "fopen() failed.\n");
+        fprintf(stderr, "Invalid file.\n");
         exit(EXIT_FAILURE);
     }
     char row[3000];
@@ -166,7 +167,7 @@ void simulation(int n,int m) {
         printf("\n");
     }
     FILE *fp;
-    fp = fopen("cell_status.txt","w");
+    fp = fopen(myfile,"w");
     fprintf(fp,"--final status--\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {

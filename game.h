@@ -7,6 +7,7 @@
 
 int cell[2000][2000];
 int flag[2000][2000];
+char* myfile;
 
 void initial_mark(int,int);
 void initial_cell(int,int);
