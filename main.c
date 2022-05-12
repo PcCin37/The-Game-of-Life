@@ -1,17 +1,14 @@
 #include <stdio.h>
-
-#include "cell.h"
+#include "game.h"
 
 int main() {
     int n, m;
-    int step;
+    int max_life;
     printf("please enter the world size and the steps you want:");
-    scanf("%d %d %d", &n, &m, &step);
+    scanf("%d %d %d", &n, &m, &max_life);
     initial_cell(n, m);
-    for (int i = 0; i < step; i++) {
-        printf("1");
+    for (int i = 0; i < max_life; i++){
         printf("Round %d of the game:\n", i);
-        printf("2");
-        simulation(i, n, m);
+        simulation(n, m);
     }
 }

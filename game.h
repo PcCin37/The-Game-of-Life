@@ -1,12 +1,16 @@
 //
-// Created by asus on 2022/5/10.
+// Created by asus on 2022/5/11.
 //
 
-#ifndef MAIN_C_GAME_H
-#define MAIN_C_GAME_H
+#ifndef PJ_GAME_H
+#define PJ_GAME_H
 
-int main_game();
-char* initfile;
-char* resultfile;
+int cell[2000][2000];
+int flag[2000][2000];
 
-#endif //MAIN_C_GAME_H
+void initial_mark(int,int);
+void initial_cell(int,int);
+void read_status();
+void simulation(int,int);
+
+#endif //PJ_GAME_H

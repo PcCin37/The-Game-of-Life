@@ -1,8 +1,8 @@
 
 # code details
 
-EXE = ./game
-SRC= main.c cell.c map.c
+EXE = ./g
+SRC= main.c game.c
 
 # generic build details
 
@@ -29,7 +29,7 @@ clean:
 
 # dependencies
 
-main.o: main.c cell.h
-cell.o: cell.c cell.h map.h
-map.o: map.c map.h cell.h
+main.o: main.c game.h
+game.o: game.c game.h
+
 

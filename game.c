@@ -1,101 +1,179 @@
 //
-// Created by asus on 2022/5/10.
+// Created by asus on 2022/5/11.
 //
 
 #include "game.h"
-#include "map.h"
-#include "cell.h"
 
 #include <stdio.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
-int main_game() {
+int p = 0;
+
+void initial_mark(int n, int m) {
+    for (int i = 0;i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            flag[i][j] = 0;
+        }
+    }
+}
+
+void initial_cell(int n, int m) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            // randomly form the initial world
+            // introduce a p for random number, when p < 5, let the cell be dead
+            int p = rand() % 10;
+            if (p < 5) {
+                cell[i][j] = 0;
+            }
+            else {
+                cell[i][j] = 1;
+            }
+            flag[i][j] = 0;
+        }
+    }
+
+    //-------------output--------------
     FILE *fp;
-    fp = fopen(initfile, "r");
-    char in[500];
-    int step = -100;
-    int rownum;
-    int colnum;
-    int i;
-    int j;
-    int sum;
-    readinitmap(&rownum, &colnum, initfile);
-    int** old = (int **)malloc(sizeof(int *) * rownum);
-    int** new = (int **)malloc(sizeof(int *) * rownum);
-    int** now = (int **)malloc(sizeof(int *) * rownum);
-
-    for (j = 0; fgets(in, 250, fp) != NULL; j++) {
-        old[j] = (int *)malloc(sizeof(int) * colnum);
-        for (i = 0; i < strlen(in) && in[i] != '\r' && in[i] != '\n'; i++) {
-            if (in[i] != '1' && in[i] != '0') {
-                return -3;
-            }
-            old[j][i] = in[i] - '0';
+    fp = fopen("cell_status.txt","w");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            printf("%d ",cell[i][j]);
         }
+        printf("\n");
     }
-
-    for (i = 0; i < rownum; i++) {
-        new[i] = (int *)malloc(sizeof(int) * colnum);
-        now[i] = (int *)malloc(sizeof(int) * colnum);
-        memset(new[i], 0, sizeof(new[i]));
-        memset(now[i], 0, sizeof(now[i]));
+    fprintf(fp,"--initial status--\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            fprintf(fp,"%d", cell[i][j]);
+        }
+        fprintf(fp,"\n");
     }
-    while (1) {
-        if (step != -100 && step < 0) {
-            break;
-        }
-        //Deal with the four corners
-        new[0][0] = status(old[0][0], old[0][1] + old[1][0] + old[1][1]);
-        new[rownum - 1][0] = status(old[rownum - 1][0], old[rownum - 1][1] + old[rownum - 2][0] + old[rownum - 2][1]);
-        new[0][colnum - 1] = status(old[0][colnum - 1], old[0][colnum - 2] + old[1][colnum - 1] + old[1][colnum - 2]);
-        new[rownum - 1][colnum - 1] = status(old[rownum - 1][colnum - 1], old[rownum - 1][colnum - 2] + old[rownum - 2][colnum - 1] + old[rownum - 2][colnum - 2]);
-        //Deal with four edges
-        for (i = 1; i < rownum - 1; i++) {
-            new[i][0] = status(old[i][0], old[i - 1][0] + old[i + 1][0] + old[i][1] + old[i - 1][1] + old[i + 1][1]);
-            new[i][colnum - 1] = status(old[i][colnum - 1], old[i - 1][colnum - 1] + old[i + 1][colnum - 1] + old[i][colnum - 2] + old[i - 1][colnum - 2] + old[i + 1][colnum - 2]);
-        }
-        for (i = 1; i < colnum - 1; i++) {
-            new[rownum - 1][i] = status(old[rownum - 1][i], old[rownum - 1][i - 1] + old[rownum - 1][i + 1] + old[rownum - 2][i] + old[rownum - 2][i + 1] + old[rownum - 2][i - 1]);
-            new[0][i] = status(old[0][i], old[0][i - 1] + old[0][i + 1] + old[1][i] + old[1][i + 1] + old[1][i - 1]);
-        }
-        //Deal with the middle part
-        for (i = 1; i < rownum - 1; i++) {
-            for (j = 1, sum = 0; j < colnum - 1; j++) {
-                new[i][j] = status(old[i][j], old[i - 1][j] + old[i + 1][j] + old[i][j-1] + old[i][j + 1] + old[i - 1][j - 1] + old[i + 1][j - 1] + old[i + 1][j + 1] + old[i - 1][j + 1]);
+    fclose(fp);
+}
+
+void read_status() {
+    FILE *fp;
+    fp = fopen("cell_status.txt","r");
+    if (fp == NULL) {
+        fprintf(stderr, "fopen() failed.\n");
+        exit(EXIT_FAILURE);
+    }
+    char row[3000];
+    int p = 0;
+    int i = 0;
+
+    while (fgets(row, 3000, fp) != NULL) {
+        if (row[0] != '-') {
+            for(int j = 0; j < strlen(row); j++){
+                cell[i][j] = row[j] - '0';
             }
+            i += 1;
         }
-        fp = fopen("copy.txt", "w");
-        for (i = 0, sum = 0; i < rownum; i++) {
-            for (j = 0; j < colnum; j++) {
-                now[i][j] = old[i][j];
-                if ((old[i][j] = new[i][j])==1) {
-                    sum++;
-                }
-                fprintf(fp,"%d", old[i][j]);
-            }
-            fprintf(fp,"\n");
-            memset(new[i], 0, sizeof(new[i]));
-        }
-        fclose(fp);
-        if (sum == 0) {
-            break;
-        }
-        for (i = 0, sum = 0; i < rownum; i++) {
-            for (j = 0; j < colnum; j++) {
-                if (now[i][j] == old[i][j]) {
-                    sum++;
+        p += 1;
+    }
+}
+
+void simulation(int n,int m) {
+    read_status();
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            int cnt = 0;
+            // search with the direction down
+            if (i - 1 >= 0){
+                // printf("(%d,%d) %d \n",i - 1,j,cell[i - 1][j]);
+                if (cell[i - 1][j] == 1) {
+                    cnt += 1;
                 }
             }
+            if (i + 1 < n) {
+                // printf("(%d,%d) %d \n",i + 1,j,cell[i + 1][j]);
+                if (cell[i + 1][j] == 1) {
+                    cnt += 1;
+                }
+            }
+            if (j - 1 >= 0) {
+                // printf("(%d,%d) %d \n",i,j - 1,cell[i][j - 1]);
+                if (cell[i][j - 1] == 1) {
+                    cnt += 1;
+                }
+            }
+            if (j + 1 < m) {
+                //printf("(%d,%d) %d \n",i,j + 1,cell[i][j + 1]);
+                if (cell[i][j + 1] == 1) {
+                    cnt += 1;
+                }
+            }
+            if (j + 1 < m && i + 1 < n) {
+                // printf("(%d,%d) %d \n",i + 1,j + 1,cell[i + 1][j + 1]);
+                if (cell[i + 1][j + 1] == 1) {
+                    cnt += 1;
+                }
+            }
+            if (j + 1 < m && i - 1 >= 0) {
+                // printf("(%d,%d) %d \n",i - 1,j +1,cell[i-1][j+1]);
+                if (cell[i - 1][j + 1] == 1) {
+                    cnt += 1;
+                }
+            }
+            if (j - 1 >= 0 && i - 1 >= 0) {
+                // printf("(%d,%d) %d \n",i - 1,j - 1,cell[i - 1][j - 1]);
+                if (cell[i - 1][j - 1] == 1) {
+                    cnt += 1;
+                }
+            }
+            if (j - 1 >= 0 && i + 1 < n) {
+                // printf("(%d,%d) %d \n",i,j,cell[i + 1][ j - 1]);
+                if (cell[i + 1][j - 1] == 1) {
+                    cnt += 1;
+                }
+            }
+            flag[i][j] = cnt;
+            // printf("(%d,%d) %d \n",i,j,cnt);
         }
-        if (sum == rownum * colnum) {
-            break;
-        }
-        if (step != -100) {
-            step--;
+
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (cell[i][j] == 1) {
+                if (flag[i][j] == 0 || flag[i][j] == 1) {
+                    cell[i][j] = 0;
+                }
+                if (flag[i][j] == 2 || flag[i][j] == 3) {
+                    cell[i][j] = 1;
+                }
+                if (flag[i][j] > 3) {
+                    cell[i][j] = 0;
+                }
+            }
+            else if (cell[i][j] == 0) {
+                if (flag[i][j] == 3) {
+                    cell[i][j] = 1;
+                }
+            }
         }
     }
-    free(old);
-    free(new);
-    return 0;
+
+    //-------------output--------------
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            printf("%d ", cell[i][j]);
+        }
+        printf("\n");
+    }
+    FILE *fp;
+    fp = fopen("cell_status.txt","w");
+    fprintf(fp,"--final status--\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            fprintf(fp,"%d", cell[i][j]);
+        }
+        fprintf(fp,"\n");
+    }
+    fclose(fp);
+    initial_mark(n,m);
 }
