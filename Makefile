@@ -1,8 +1,8 @@
 
 # code details
 
-EXE = ./g
-SRC= main.c game.c
+EXE = ./lifegame
+SRC= main.c menu.c game.c
 
 # generic build details
 
@@ -29,7 +29,8 @@ clean:
 
 # dependencies
 
-main.o: main.c game.h
+main.o: main.c game.h menu.h
+menu.o: menu.c menu.h game.h
 game.o: game.c game.h
 
 

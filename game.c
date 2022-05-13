@@ -19,7 +19,7 @@ void initial_mark(int n, int m) {
     }
 }
 
-void initial_cell(int n, int m) {
+int initial_cell(int n, int m) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             // randomly form the initial world
@@ -38,6 +38,11 @@ void initial_cell(int n, int m) {
     //-------------output--------------
     FILE *fp;
     fp = fopen(myfile,"w");
+    if (fp == NULL) {
+        printf("File not found.\n");
+        return -1;
+    }
+
     printf("\nInitial status:\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -53,19 +58,21 @@ void initial_cell(int n, int m) {
         fprintf(fp,"\n");
     }
     fclose(fp);
+    return 0;
 }
 
-void read_status() {
+int read_status() {
     FILE *fp;
     fp = fopen(myfile,"r");
     if (fp == NULL) {
+        printf("File not found.\n");
         fprintf(stderr, "Invalid file.\n");
         exit(EXIT_FAILURE);
     }
+
     char row[3000];
     int p = 0;
     int i = 0;
-
     while (fgets(row, 3000, fp) != NULL) {
         if (row[0] != '-') {
             for(int j = 0; j < strlen(row); j++){
@@ -75,6 +82,7 @@ void read_status() {
         }
         p += 1;
     }
+    return 0;
 }
 
 void simulation(int n,int m) {
@@ -176,5 +184,5 @@ void simulation(int n,int m) {
         fprintf(fp,"\n");
     }
     fclose(fp);
-    initial_mark(n,m);
+    initial_mark(n, m);
 }

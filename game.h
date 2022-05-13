@@ -10,8 +10,8 @@ int flag[2000][2000];
 char* myfile;
 
 void initial_mark(int,int);
-void initial_cell(int,int);
-void read_status();
+int initial_cell(int,int);
+int read_status();
 void simulation(int,int);
 
 #endif //PJ_GAME_H
