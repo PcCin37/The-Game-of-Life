@@ -11,14 +11,6 @@
 
 int p = 0;
 
-void initial_mark(int n, int m) {
-    for (int i = 0;i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            flag[i][j] = 0;
-        }
-    }
-}
-
 int initial_cell(int n, int m) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -73,6 +65,11 @@ int read_status() {
     char row[3000];
     int p = 0;
     int i = 0;
+    if (fgets(row, 3000, fp) == NULL) {
+        printf("Nothing in the file.\n");
+        return -1;
+    }
+
     while (fgets(row, 3000, fp) != NULL) {
         if (row[0] != '-') {
             for(int j = 0; j < strlen(row); j++){
@@ -85,7 +82,7 @@ int read_status() {
     return 0;
 }
 
-void simulation(int n,int m) {
+int simulation(int n,int m) {
     read_status();
 
     for (int i = 0; i < n; i++) {
@@ -174,8 +171,14 @@ void simulation(int n,int m) {
         }
         printf("\n");
     }
+
     FILE *fp;
     fp = fopen(myfile,"w");
+    if (fp == NULL) {
+        printf("File not found.\n");
+        return -1;
+    }
+
     fprintf(fp,"--final status--\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -184,5 +187,6 @@ void simulation(int n,int m) {
         fprintf(fp,"\n");
     }
     fclose(fp);
-    initial_mark(n, m);
+
+    return 0;
 }
