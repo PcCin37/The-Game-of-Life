@@ -41,21 +41,37 @@ void run_menu() {
 
     initial_cell(n, m);
 
-    printf("\nDefine the game steps:");
+    printf("Whether you want to define the step of the game (yes or no):");
     gets(arr);
-    step = atoi(arr);
     while(1) {
-        if (step <= 0) {
-            printf("Wrong input. Define the game steps:");
+        if (strcmp(arr, "yes") != 0 && strcmp(arr, "no") != 0) {
+            printf("Please input 'yse' or 'no':");
             gets(arr);
-            step = atoi(arr);
         }
         else break;
     }
 
-    //initial_cell(n, m);
-    for (int i = 0; i < step; i++){
-        printf("\nRound %d of the game:\n", i + 1);
-        simulation(n, m);
+    if (strcmp(arr, "yes") == 0) {
+        printf("\nDefine the game steps:");
+        gets(arr);
+        step = atoi(arr);
+        while(1) {
+            if (step <= 0) {
+                printf("Wrong input. Define the game steps:");
+                gets(arr);
+                step = atoi(arr);
+            }
+            else break;
+        }
+
+        //initial_cell(n, m);
+        for (int i = 0; i < step; i++){
+            printf("\nRound %d of the game:\n", i + 1);
+            simulation(n, m);
+        }
     }
+    else {
+
+    }
+
 }
