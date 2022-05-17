@@ -11,7 +11,7 @@
 
 void run_menu() {
     int n, m;
-    int step;
+    int step = -100;
     char arr[50] = {};
     memset(arr, 0, 20);
 
@@ -67,11 +67,13 @@ void run_menu() {
         //initial_cell(n, m);
         for (int i = 0; i < step; i++){
             printf("\nRound %d of the game:\n", i + 1);
-            simulation(n, m);
+
         }
     }
     else {
-
+        while(1) {
+            simulation(n, m);
+        }
     }
 
 }
