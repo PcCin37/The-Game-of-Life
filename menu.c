@@ -67,12 +67,15 @@ void run_menu() {
         //initial_cell(n, m);
         for (int i = 0; i < step; i++){
             printf("\nRound %d of the game:\n", i + 1);
-
+            simulation(n, m);
         }
     }
     else {
+        int i = 0;
         while(1) {
+            printf("\nRound %d of the game:\n", i + 1);
             simulation(n, m);
+            i++;
         }
     }
 
