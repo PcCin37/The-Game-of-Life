@@ -8,7 +8,7 @@ SRC= main.c menu.c game.c
 
 CC=      gcc
 CFLAGS= -std=c99 -Wall
-CLINK= 
+CLINK= -lSDL2 -lSDL2_image
 
 # compile to object code
 

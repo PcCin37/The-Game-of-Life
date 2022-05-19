@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <SDL2/SDL.h>
 
 #include "menu.h"
 #include "game.h"
@@ -14,6 +15,12 @@ void run_menu() {
     int step = -100;
     char arr[50] = {};
     memset(arr, 0, 20);
+    SDL_Window *window = NULL;
+    SDL_Surface *screen = NULL;
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n",SDL_GetError());
+        return;
+    }
 
     printf("Define the number of rows in the world:");
     gets(arr);
@@ -39,7 +46,17 @@ void run_menu() {
         else break;
     }
 
-    initial_cell(n, m);
+    window = SDL_CreateWindow("LifeGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, n*100, m*100, SDL_WINDOW_SHOWN);
+    if (!window) {
+        printf("Window could not initialize! SDL_Error: %s\n",SDL_GetError());
+        return;
+    }
+    screen = SDL_GetWindowSurface(window);
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+    SDL_UpdateWindowSurface(window);
+    drawthestrct(window, screen, n, m);
+
+    initial_cell(window, screen, n, m);
 
     printf("Whether you want to define the step of the game (yes or no):");
     gets(arr);
@@ -65,7 +82,8 @@ void run_menu() {
         }
 
         //initial_cell(n, m);
-        for (int i = 0; i < step; i++){
+        int i;
+        for (i = 0; i < step; i++){
             printf("\nRound %d of the game:\n", i + 1);
             simulation(n, m);
         }
@@ -78,5 +96,8 @@ void run_menu() {
             i++;
         }
     }
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
 }
