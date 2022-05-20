@@ -12,22 +12,64 @@
 
 int p = 0;
 
+void loadmodel(int input){
+    //int i = 100;
+    if (input == 1) {
+        SDL_Delay(1000);
+    }
+    else if (input == 2) {
+        while(1) {
+            const Uint8 *state = SDL_GetKeyboardState(NULL);
+            SDL_PumpEvents();
+            if (state[SDL_SCANCODE_DOWN]) {
+                while(1) {
+                    const Uint8 *state2 = SDL_GetKeyboardState(NULL);
+                    SDL_PumpEvents();
+                    if (state2[SDL_SCANCODE_DOWN]) {
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                break;
+            }
+            else if (state[SDL_SCANCODE_RIGHT]) {
+                while(1) {
+                    const Uint8 *state2 = SDL_GetKeyboardState(NULL);
+                    SDL_PumpEvents();
+                    if (state2[SDL_SCANCODE_RIGHT]) {
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                break;
+            }
+            else if (state[SDL_SCANCODE_ESCAPE]) {
+                exit(0);
+            }
+        }
+    }
+}
+
 void drawthestrct(SDL_Window *window, SDL_Surface *screen, int n, int m) {
     int i;
     for (i = 0; i <= n; i++) {
-        SDL_Rect tape = {i*100, 0, 1, 100*m};
+        SDL_Rect tape = {i * 40, 0, 1, 40 * m};
         SDL_FillRect(screen, &tape, SDL_MapRGB(screen->format, 128, 128, 128));
         SDL_UpdateWindowSurface(window);
     }
     for(i = 0; i <= m; i++){
-        SDL_Rect tape = {0, i*100, 100*n,1};
+        SDL_Rect tape = {0, i * 40, 40 * n,1};
         SDL_FillRect(screen, &tape, SDL_MapRGB(screen->format, 128, 128, 128));
         SDL_UpdateWindowSurface(window);
     }
 }
 
 void drawthesqure (SDL_Window *window, SDL_Surface *screen, int n, int m) {
-    SDL_Rect squre = {n, m, 100, 100};
+    SDL_Rect squre = {n, m, 40, 40};
     SDL_FillRect(screen, &squre, SDL_MapRGB(screen->format, 0, 0, 0));
     SDL_UpdateWindowSurface(window);
 }
@@ -50,7 +92,7 @@ int initial_cell(SDL_Window *window, SDL_Surface *screen, int n, int m) {
         }
     }
 
-    //-------------output--------------
+    // output of the initial status of the game
     FILE *fp;
     fp = fopen(myfile,"w");
     if (fp == NULL) {
@@ -63,7 +105,7 @@ int initial_cell(SDL_Window *window, SDL_Surface *screen, int n, int m) {
         for (j = 0; j < m; j++) {
             printf("%d ",cell[i][j]);
             if (cell[i][j] == 1) {
-                drawthesqure(window, screen, 100 * j, i * 100);
+                drawthesqure(window, screen, 40 * j, i * 40);
             }
         }
         printf("\n");
@@ -109,15 +151,19 @@ int read_status() {
     return 0;
 }
 
-int simulation(int n,int m) {
+int simulation(SDL_Window *window, SDL_Surface *screen, int n,int m) {
     read_status();
 
+    // re-intialize the sdl parts
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+    SDL_UpdateWindowSurface(window);
+    drawthestrct(window, screen, m, n);
     int i;
     int j;
     for (i = 0; i < n; i++) {
         for (j = 0; j < m; j++) {
             int cnt = 0;
-            // search with the direction down
+            // search the live cell around
             if (i - 1 >= 0){
                 // printf("(%d,%d) %d \n",i - 1,j,cell[i - 1][j]);
                 if (cell[i - 1][j] == 1) {
@@ -172,6 +218,7 @@ int simulation(int n,int m) {
 
     }
 
+    // according to the rules, change the status of the cell
     for (i = 0; i < n; i++) {
         for (j = 0; j < m; j++) {
             if (cell[i][j] == 1) {
@@ -193,14 +240,18 @@ int simulation(int n,int m) {
         }
     }
 
-    //-------------output--------------
+    // the output part
     for (i = 0; i < n; i++) {
         for (j = 0; j < m; j++) {
             printf("%d ", cell[i][j]);
+            if (cell[i][j] == 1) {
+                drawthesqure(window, screen, 40 * j, i * 40);
+            }
         }
         printf("\n");
     }
 
+    // output the result to the file
     FILE *fp;
     fp = fopen(myfile,"w");
     if (fp == NULL) {
@@ -216,6 +267,5 @@ int simulation(int n,int m) {
         fprintf(fp,"\n");
     }
     fclose(fp);
-
     return 0;
 }

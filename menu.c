@@ -11,6 +11,7 @@
 #include "game.h"
 
 void run_menu() {
+    int useroption;
     int n, m;
     int step = -100;
     char arr[50] = {};
@@ -46,7 +47,7 @@ void run_menu() {
         else break;
     }
 
-    window = SDL_CreateWindow("LifeGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, n*100, m*100, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("The Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m * 40, n * 40, SDL_WINDOW_SHOWN);
     if (!window) {
         printf("Window could not initialize! SDL_Error: %s\n",SDL_GetError());
         return;
@@ -54,7 +55,7 @@ void run_menu() {
     screen = SDL_GetWindowSurface(window);
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
     SDL_UpdateWindowSurface(window);
-    drawthestrct(window, screen, n, m);
+    drawthestrct(window, screen, m, n);
 
     initial_cell(window, screen, n, m);
 
@@ -81,18 +82,55 @@ void run_menu() {
             else break;
         }
 
+        printf("\nDefine the model of the game:\n");
+        printf("1. run the game according to the delay\n");
+        printf("2. run the game by press the key 'down' or 'right'\n");
+        printf("Your option:");
+        gets(arr);
+        useroption = atoi(arr);
+        while(1) {
+            if (useroption <= 0) {
+                printf("Wrong input. Define the model of the game:");
+                gets(arr);
+                useroption = atoi(arr);
+            }
+            else break;
+        }
+
+        loadmodel(useroption);
+
         //initial_cell(n, m);
         int i;
         for (i = 0; i < step; i++){
             printf("\nRound %d of the game:\n", i + 1);
-            simulation(n, m);
+            simulation(window, screen, n, m);
+            loadmodel(useroption);
         }
     }
     else {
+        printf("\nDefine the model of the game:\n");
+        printf("1. run the game according to the delay\n");
+        printf("2. run the game by press the key 'down' or 'right'\n");
+        printf("Hint: You can stop the game by pressing 'esc' whenever you want.\n");
+        printf("Your option:");
+        gets(arr);
+        useroption = atoi(arr);
+        while(1) {
+            if (useroption <= 0) {
+                printf("Wrong input. Define the model of the game:");
+                gets(arr);
+                useroption = atoi(arr);
+            }
+            else break;
+        }
+
+        loadmodel(useroption);
+
         int i = 0;
         while(1) {
             printf("\nRound %d of the game:\n", i + 1);
-            simulation(n, m);
+            simulation(window, screen, n, m);
+            loadmodel(useroption);
             i++;
         }
     }
