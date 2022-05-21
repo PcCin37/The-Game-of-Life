@@ -22,5 +22,6 @@ int initial_cell(SDL_Window *, SDL_Surface *, int, int);
 int read_status();
 int read_delay();
 int simulation(SDL_Window *, SDL_Surface *, int, int);
+int simu_testcase(int, int);
 
 #endif //PJ_GAME_H

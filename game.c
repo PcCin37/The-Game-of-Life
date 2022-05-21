@@ -204,7 +204,7 @@ int read_delay() {
     if (fp == NULL) {
         printf("File not found.\n");
         fprintf(stderr, "Invalid file.\n");
-        exit(EXIT_FAILURE);
+        return -1;
     }
 
     char row[3000];
@@ -255,12 +255,48 @@ int read_status() {
 }
 
 int simulation(SDL_Window *window, SDL_Surface *screen, int n,int m) {
-    read_status();
+    //read_status();
 
     // re-intialize the sdl parts
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
     SDL_UpdateWindowSurface(window);
     drawthestrct(window, screen, m, n);
+
+    int i;
+    int j;
+    simu_testcase(n, m);
+
+    // the output part
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
+            printf("%d ", cell[i][j]);
+            if (cell[i][j] == 1) {
+                drawthelivesqure(window, screen, 40 * j, i * 40);
+            }
+        }
+        printf("\n");
+    }
+
+    // output the result to the file
+    FILE *fp;
+    fp = fopen(myfile,"w");
+    if (fp == NULL) {
+        printf("File not found.\n");
+        return -1;
+    }
+
+    fprintf(fp,"--final status--\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
+            fprintf(fp,"%d", cell[i][j]);
+        }
+        fprintf(fp,"\n");
+    }
+    fclose(fp);
+    return 0;
+}
+
+int simu_testcase(int n, int m) {
     int i;
     int j;
     for (i = 0; i < n; i++) {
@@ -342,33 +378,4 @@ int simulation(SDL_Window *window, SDL_Surface *screen, int n,int m) {
             }
         }
     }
-
-    // the output part
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < m; j++) {
-            printf("%d ", cell[i][j]);
-            if (cell[i][j] == 1) {
-                drawthelivesqure(window, screen, 40 * j, i * 40);
-            }
-        }
-        printf("\n");
-    }
-
-    // output the result to the file
-    FILE *fp;
-    fp = fopen(myfile,"w");
-    if (fp == NULL) {
-        printf("File not found.\n");
-        return -1;
-    }
-
-    fprintf(fp,"--final status--\n");
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < m; j++) {
-            fprintf(fp,"%d", cell[i][j]);
-        }
-        fprintf(fp,"\n");
-    }
-    fclose(fp);
-    return 0;
 }

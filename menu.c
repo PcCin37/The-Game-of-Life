@@ -127,6 +127,7 @@ void run_menu() {
         int i;
         for (i = 0; i < step; i++){
             printf("\nRound %d of the game:\n", i + 1);
+            read_status();
             simulation(window, screen, n, m);
             loadmodel(useroption, delay);
         }
@@ -153,6 +154,7 @@ void run_menu() {
         int i = 0;
         while(1) {
             printf("\nRound %d of the game:\n", i + 1);
+            read_status();
             simulation(window, screen, n, m);
             loadmodel(useroption, delay);
             i++;

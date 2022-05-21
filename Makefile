@@ -2,7 +2,7 @@
 # code details
 
 EXE = ./lifegame
-SRC= main.c menu.c game.c
+SRC= main.c menu.c game.c test.c
 
 # generic build details
 
@@ -32,5 +32,6 @@ clean:
 main.o: main.c game.h menu.h
 menu.o: menu.c menu.h game.h
 game.o: game.c game.h
+test.o: test.c
 
 
