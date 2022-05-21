@@ -65,7 +65,7 @@ void run_menu() {
     gets(arr);
     rord = atoi(arr);
     while(1) {
-        if (rord <= 0) {
+        if (rord <= 0 || rord > 2) {
             printf("Wrong input. Define the model of the game:");
             gets(arr);
             rord = atoi(arr);
@@ -112,7 +112,7 @@ void run_menu() {
         gets(arr);
         useroption = atoi(arr);
         while(1) {
-            if (useroption <= 0) {
+            if (useroption <= 0 || useroption > 2) {
                 printf("Wrong input. Define the model of the game:");
                 gets(arr);
                 useroption = atoi(arr);
@@ -141,7 +141,7 @@ void run_menu() {
         gets(arr);
         useroption = atoi(arr);
         while(1) {
-            if (useroption <= 0) {
+            if (useroption <= 0 || useroption > 2) {
                 printf("Wrong input. Define the model of the game:");
                 gets(arr);
                 useroption = atoi(arr);

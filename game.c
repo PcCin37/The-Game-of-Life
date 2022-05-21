@@ -62,19 +62,19 @@ void drawthestrct(SDL_Window *window, SDL_Surface *screen, int n, int m) {
     int i;
     for (i = 0; i <= n; i++) {
         SDL_Rect tape = {i * 40, 0, 1, 40 * m};
-        SDL_FillRect(screen, &tape, SDL_MapRGB(screen->format, 128, 128, 128));
+        SDL_FillRect(screen, &tape, SDL_MapRGB(screen->format, 65, 105, 225));
         SDL_UpdateWindowSurface(window);
     }
     for(i = 0; i <= m; i++){
         SDL_Rect tape = {0, i * 40, 40 * n,1};
-        SDL_FillRect(screen, &tape, SDL_MapRGB(screen->format, 128, 128, 128));
+        SDL_FillRect(screen, &tape, SDL_MapRGB(screen->format, 65, 105, 225));
         SDL_UpdateWindowSurface(window);
     }
 }
 
 void drawthelivesqure (SDL_Window *window, SDL_Surface *screen, int n, int m) {
     SDL_Rect squre = {n, m, 40, 40};
-    SDL_FillRect(screen, &squre, SDL_MapRGB(screen->format, 0, 0, 0));
+    SDL_FillRect(screen, &squre, SDL_MapRGB(screen->format, 135, 206, 235));
     SDL_UpdateWindowSurface(window);
 }
 
@@ -116,6 +116,7 @@ int initial_cell(SDL_Window *window, SDL_Surface *screen, int n, int m) {
             printf("%d ",cell[i][j]);
             if (cell[i][j] == 1) {
                 drawthelivesqure(window, screen, 40 * j, i * 40);
+                drawthestrct(window, screen, m, n);
             }
         }
         printf("\n");
@@ -277,6 +278,7 @@ int simulation(SDL_Window *window, SDL_Surface *screen, int n,int m) {
             //printf("%d ", cell[i][j]);
             if (cell[i][j] == 1) {
                 drawthelivesqure(window, screen, 40 * j, i * 40);
+                drawthestrct(window, screen, m, n);
             }
         }
         //printf("\n");
