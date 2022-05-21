@@ -23,7 +23,7 @@ void run_menu() {
         return;
     }
 
-    printf("Define the number of rows in the world:");
+    printf("\nDefine the number of rows in the world:");
     gets(arr);
     n = atoi(arr);
     while(1) {
@@ -35,7 +35,7 @@ void run_menu() {
         else break;
     }
 
-    printf("Define the number of columns in the world:");
+    printf("\nDefine the number of columns in the world:");
     gets(arr);
     m = atoi(arr);
     while(1) {
@@ -57,9 +57,30 @@ void run_menu() {
     SDL_UpdateWindowSurface(window);
     drawthestrct(window, screen, m, n);
 
-    initial_cell(window, screen, n, m);
+    int rord;
+    printf("\nRandomly initialize the world or define it by yourself:\n");
+    printf("1. Randomly\n");
+    printf("2. Click to define\n");
+    printf("Your option:");
+    gets(arr);
+    rord = atoi(arr);
+    while(1) {
+        if (rord <= 0) {
+            printf("Wrong input. Define the model of the game:");
+            gets(arr);
+            rord = atoi(arr);
+        }
+        else break;
+    }
 
-    printf("Whether you want to define the step of the game (yes or no):");
+    if (rord == 1) {
+        initial_cell(window, screen, n, m);
+    }
+    else if (rord == 2) {
+        clicktodefine(window, screen, n, m);
+    }
+
+    printf("\nWhether you want to define the step of the game (yes or no):");
     gets(arr);
     while(1) {
         if (strcmp(arr, "yes") != 0 && strcmp(arr, "no") != 0) {
@@ -68,6 +89,8 @@ void run_menu() {
         }
         else break;
     }
+
+    int delay = read_delay();
 
     if (strcmp(arr, "yes") == 0) {
         printf("\nDefine the game steps:");
@@ -97,14 +120,15 @@ void run_menu() {
             else break;
         }
 
-        loadmodel(useroption);
+        int delay = read_delay();
+        loadmodel(useroption, delay);
 
         //initial_cell(n, m);
         int i;
         for (i = 0; i < step; i++){
             printf("\nRound %d of the game:\n", i + 1);
             simulation(window, screen, n, m);
-            loadmodel(useroption);
+            loadmodel(useroption, delay);
         }
     }
     else {
@@ -124,13 +148,13 @@ void run_menu() {
             else break;
         }
 
-        loadmodel(useroption);
+        loadmodel(useroption, delay);
 
         int i = 0;
         while(1) {
             printf("\nRound %d of the game:\n", i + 1);
             simulation(window, screen, n, m);
-            loadmodel(useroption);
+            loadmodel(useroption, delay);
             i++;
         }
     }

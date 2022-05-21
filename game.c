@@ -10,12 +10,11 @@
 
 #include "game.h"
 
-int p = 0;
 
-void loadmodel(int input){
+void loadmodel(int input, int delay){
     //int i = 100;
     if (input == 1) {
-        SDL_Delay(1000);
+        SDL_Delay(delay * 1000);
     }
     else if (input == 2) {
         while(1) {
@@ -68,9 +67,15 @@ void drawthestrct(SDL_Window *window, SDL_Surface *screen, int n, int m) {
     }
 }
 
-void drawthesqure (SDL_Window *window, SDL_Surface *screen, int n, int m) {
+void drawthelivesqure (SDL_Window *window, SDL_Surface *screen, int n, int m) {
     SDL_Rect squre = {n, m, 40, 40};
     SDL_FillRect(screen, &squre, SDL_MapRGB(screen->format, 0, 0, 0));
+    SDL_UpdateWindowSurface(window);
+}
+
+void drawthedeadsqure (SDL_Window *window, SDL_Surface *screen, int n, int m) {
+    SDL_Rect squre = {n, m, 40, 40};
+        SDL_FillRect(screen, &squre, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
     SDL_UpdateWindowSurface(window);
 }
 
@@ -105,12 +110,14 @@ int initial_cell(SDL_Window *window, SDL_Surface *screen, int n, int m) {
         for (j = 0; j < m; j++) {
             printf("%d ",cell[i][j]);
             if (cell[i][j] == 1) {
-                drawthesqure(window, screen, 40 * j, i * 40);
+                drawthelivesqure(window, screen, 40 * j, i * 40);
             }
         }
         printf("\n");
     }
     fprintf(fp,"--initial status--\n");
+    int del = rand() % 5 + 1;
+    fprintf(fp, "!%d\n", del);
     for (i = 0; i < n; i++) {
         for (j = 0; j < m; j++) {
             fprintf(fp,"%d", cell[i][j]);
@@ -119,6 +126,102 @@ int initial_cell(SDL_Window *window, SDL_Surface *screen, int n, int m) {
     }
     fclose(fp);
     return 0;
+}
+
+int clicktodefine(SDL_Window *window, SDL_Surface *screen, int n, int m) {
+    int i;
+    int j;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
+            cell[i][j] = 0;
+            flag[i][j] = 0;
+        }
+    }
+
+    printf("You can click %d times.\n", (n + m) / 2);
+
+    int num = 0;
+    while(1) {
+        SDL_Event event;
+        while(SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    SDL_DestroyWindow(window);
+                    SDL_Quit();
+                case SDL_MOUSEBUTTONDOWN:
+                    position_x = event.button.x / 40;
+                    position_y = event.button.y / 40;
+                    if (cell[position_y][position_x] == 0) {
+                        cell[position_y][position_x] = 1;
+                        drawthelivesqure(window, screen, 40 * position_x, position_y * 40);
+                        drawthestrct(window, screen, m, n);
+                        num++;
+                    }
+                    else if (cell[position_y][position_x] == 1) {
+                        cell[position_y][position_x] = 0;
+                        drawthedeadsqure(window, screen, 40 * position_x, position_y * 40);
+                        drawthestrct(window, screen, m, n);
+                        num++;
+                    }
+                    printf("Mouse down: (%d, %d)\n", position_x, position_y);
+                    break;
+            }
+        }
+        if (num == (n + m) / 2) {
+            break;
+        }
+    }
+
+    FILE *fp;
+    fp = fopen(myfile,"w");
+    if (fp == NULL) {
+        printf("File not found.\n");
+        return -1;
+    }
+    printf("\nInitial status:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
+            printf("%d ",cell[i][j]);
+        }
+        printf("\n");
+    }
+    fprintf(fp,"--initial status--\n");
+    int del = rand() % 5 + 1;
+    fprintf(fp, "!%d\n", del);
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
+            fprintf(fp,"%d", cell[i][j]);
+        }
+        fprintf(fp,"\n");
+    }
+    fclose(fp);
+    return 0;
+}
+
+int read_delay() {
+    FILE *fp;
+    fp = fopen(myfile,"r");
+    if (fp == NULL) {
+        printf("File not found.\n");
+        fprintf(stderr, "Invalid file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char row[3000];
+    int p;
+    int delay;
+    if (fgets(row, 3000, fp) == NULL) {
+        printf("Nothing in the file.\n");
+        return -1;
+    }
+
+    while (fgets(row, 3000, fp) != NULL) {
+        if (row[0] == '!') {
+            p = strlen(row);
+            delay = row[p - 1];
+        }
+    }
+    return delay;
 }
 
 int read_status() {
@@ -140,7 +243,7 @@ int read_status() {
     }
 
     while (fgets(row, 3000, fp) != NULL) {
-        if (row[0] != '-') {
+        if (row[0] != '-' && row[0] != '!') {
             for(j = 0; j < strlen(row); j++){
                 cell[i][j] = row[j] - '0';
             }
@@ -245,7 +348,7 @@ int simulation(SDL_Window *window, SDL_Surface *screen, int n,int m) {
         for (j = 0; j < m; j++) {
             printf("%d ", cell[i][j]);
             if (cell[i][j] == 1) {
-                drawthesqure(window, screen, 40 * j, i * 40);
+                drawthelivesqure(window, screen, 40 * j, i * 40);
             }
         }
         printf("\n");
