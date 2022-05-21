@@ -17,4 +17,6 @@ And during the program, the system will ask you if you want to run the game acco
 https://github.com/PcCin37/The-Game-of-Life
 
 ###git history: 
-
+![git1](https://user-images.githubusercontent.com/100663109/169659502-bdae1041-1c08-4fed-92c3-c1c05d502d61.png)
+![git2](https://user-images.githubusercontent.com/100663109/169659509-810cf655-781e-48d3-8694-af89534e7ea0.png)
+![git3](https://user-images.githubusercontent.com/100663109/169659510-01026e75-1bf3-44bc-a678-48bb16b7588f.png)
