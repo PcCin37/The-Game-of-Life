@@ -14,7 +14,12 @@
 void loadmodel(int input, int delay){
     //int i = 100;
     if (input == 1) {
-        SDL_Delay(delay * 500);
+        SDL_Delay(delay * 300);
+        const Uint8 *state = SDL_GetKeyboardState(NULL);
+        SDL_PumpEvents();
+        if (state[SDL_SCANCODE_ESCAPE]) {
+            exit(0);
+        }
     }
     else if (input == 2) {
         while(1) {
@@ -163,7 +168,7 @@ int clicktodefine(SDL_Window *window, SDL_Surface *screen, int n, int m) {
                         drawthestrct(window, screen, m, n);
                         num++;
                     }
-                    printf("Mouse down: (%d, %d)\n", position_x, position_y);
+                    //printf("Mouse down: (%d, %d)\n", position_x, position_y);
                     break;
             }
         }
@@ -269,12 +274,12 @@ int simulation(SDL_Window *window, SDL_Surface *screen, int n,int m) {
     // the output part
     for (i = 0; i < n; i++) {
         for (j = 0; j < m; j++) {
-            printf("%d ", cell[i][j]);
+            //printf("%d ", cell[i][j]);
             if (cell[i][j] == 1) {
                 drawthelivesqure(window, screen, 40 * j, i * 40);
             }
         }
-        printf("\n");
+        //printf("\n");
     }
 
     // output the result to the file
