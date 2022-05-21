@@ -14,7 +14,7 @@
 void loadmodel(int input, int delay){
     //int i = 100;
     if (input == 1) {
-        SDL_Delay(delay * 1000);
+        SDL_Delay(delay * 500);
     }
     else if (input == 2) {
         while(1) {
